@@ -1,0 +1,51 @@
+from tkinter import *
+import tkinter.font
+from gpiozero import LED
+import RPi.GPIO
+RPi.GPIO.setmode(RPi.GPIO.BCM)
+
+## hardware
+red_led = LED(17)
+green_led = LED(26)
+
+## GUI DEF
+win = Tk()
+win.title("LED Flash")
+myfont = tkinter.font.Font(family = "Arial", size = 12, weight = "bold")
+
+## Event functions
+def red_LED_on():
+    if red_led.is_lit:
+        red_led.off()
+        redbutton["text"] = "LED On"
+    else:
+        red_led.on()
+        redbutton["text"] = "LED Off"
+
+def green_LED_on():
+    if green_led.is_lit:
+        green_led.off()
+        greenbutton["text"] = "LED On"
+
+    else:
+        green_led.on()
+        greenbutton["text"] = "LED Off"
+
+
+def close_window():
+    RPi.GPIO.cleanup()
+    win.destroy()
+
+## widgets
+redbutton = Button(win, text = "Red LED On", font = myfont, command = red_LED_on, bg = "red", height = 1, width = 30)
+redbutton.grid(row=0, column=1)
+
+greenbutton = Button(win, text = "Green LED On",  font = myfont, command = green_LED_on, bg = "green", height = 1, width = 30)
+greenbutton.grid(row=1,column=1)
+
+exitbutton = Button(win, text = "Exit", font = myfont, command = close_window, bg = "yellow", height = 1, width = 10)
+exitbutton.grid(row=3,column=1)
+
+win.protocol("WM _DELETE_WINDOW", close_window)
+
+win.mainloop()
